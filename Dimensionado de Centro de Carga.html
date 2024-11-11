@@ -1,0 +1,544 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Dimensionado de Centro de Carga</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <style>
+        @import url('https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap');
+        body {
+            font-family: 'Inter', sans-serif;
+        }
+        .bg-gradient {
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+        }
+        .card {
+            background-color: rgba(255, 255, 255, 0.1);
+            backdrop-filter: blur(10px);
+        }
+        ::placeholder {
+            color: rgba(255, 255, 255, 0.7) !important;
+            opacity: 1;
+        }
+        :-ms-input-placeholder {
+            color: rgba(255, 255, 255, 0.7) !important;
+        }
+        ::-ms-input-placeholder {
+            color: rgba(255, 255, 255, 0.7) !important;
+        }
+    </style>
+</head>
+<body class="min-h-screen bg-gradient text-white py-8">
+    <div class="container mx-auto px-4">
+        <header class="mb-8 text-center">
+            <h1 class="text-3xl font-bold mb-4 bg-clip-text text-transparent bg-gradient-to-r from-blue-400 to-purple-400">
+                Dimensionado de Centro de Carga
+            </h1>
+            <h2 class="text-xl font-semibold mb-4">CONSULTORIA EN INGENIERIA Y EFICIENCIA ENERGETICA</h2>
+            <div class="flex justify-center items-center mb-4">
+                <img src="https://hebbkx1anhila5yf.public.blob.vercel-storage.com/Fotografia%20Minor-4051DQMxdMZeQa4dPSd6soUkfPNPag.png" alt="Consultor de Ingeniería" class="w-20 h-20 rounded-full object-cover">
+            </div>
+        </header>
+
+        <!-- Ventana Inicial -->
+        <div id="initialWindow" class="card w-full max-w-2xl mx-auto rounded-lg shadow-lg p-6">
+            <h2 class="text-2xl font-semibold mb-4 text-center">Descripción de la Aplicación</h2>
+            <p class="mb-6 text-center">
+                Esta aplicación permite dimensionar centros de carga eléctrica, calculando caídas de tensión y recomendando tableros adecuados basados en los circuitos ingresados.
+            </p>
+            <div class="flex justify-center">
+                <button id="startButton" class="px-6 py-3 bg-blue-600 text-white rounded-lg hover:bg-blue-700 focus:outline-none focus:ring-2 focus:ring-blue-400 focus:ring-opacity-50 text-lg font-semibold">
+                    Comenzar
+                </button>
+            </div>
+        </div>
+
+        <!-- Formulario de Entrada -->
+        <div id="inputForm" class="card w-full max-w-4xl mx-auto rounded-lg shadow-lg p-6 hidden">
+            <h2 class="text-2xl font-semibold mb-4 text-center">Ingrese los Datos del Circuito</h2>
+            <form id="circuitForm" class="space-y-4">
+                <div class="grid grid-cols-2 gap-4">
+                    <input id="circuito" name="circuito" placeholder="Circuito" required class="w-full px-3 py-2 placeholder-white placeholder-opacity-70 bg-blue-600 bg-opacity-50 border border-blue-300 rounded-md focus:outline-none focus:ring focus:ring-blue-200 focus:border-blue-300 text-white">
+                    <input id="descripcionCircuito" name="descripcionCircuito" placeholder="Descripción del Circuito" required class="w-full px-3 py-2 placeholder-white placeholder-opacity-70 bg-blue-600 bg-opacity-50 border border-blue-300 rounded-md focus:outline-none focus:ring focus:ring-blue-200 focus:border-blue-300 text-white">
+                    <input id="dimensionadoConductorFaseA" name="dimensionadoConductorFaseA" placeholder="Dimensionado Conductor Fase A" class="w-full px-3 py-2 placeholder-white placeholder-opacity-70 bg-blue-600 bg-opacity-50 border border-blue-300 rounded-md focus:outline-none focus:ring focus:ring-blue-200 focus:border-blue-300 text-white">
+                    <input id="dimensionadoConductorFaseB" name="dimensionadoConductorFaseB" placeholder="Dimensionado Conductor Fase B" class="w-full px-3 py-2 placeholder-white placeholder-opacity-70 bg-blue-600 bg-opacity-50 border border-blue-300 rounded-md focus:outline-none focus:ring focus:ring-blue-200 focus:border-blue-300 text-white">
+                    <input id="dimensionadoConductorNeutro" name="dimensionadoConductorNeutro" placeholder="Dimensionado Conductor Neutro" class="w-full px-3 py-2 placeholder-white placeholder-opacity-70 bg-blue-600 bg-opacity-50 border border-blue-300 rounded-md focus:outline-none focus:ring focus:ring-blue-200 focus:border-blue-300 text-white">
+                    <input id="dimensionadoConductorTierra" name="dimensionadoConductorTierra" placeholder="Dimensionado Conductor Tierra" class="w-full px-3 py-2 placeholder-white placeholder-opacity-70 bg-blue-600 bg-opacity-50 border border-blue-300 rounded-md focus:outline-none focus:ring focus:ring-blue-200 focus:border-blue-300 text-white">
+                    <input id="tension" name="tension" type="number" placeholder="Tensión (V)" required class="w-full px-3 py-2 placeholder-white placeholder-opacity-70 bg-blue-600 bg-opacity-50 border border-blue-300 rounded-md focus:outline-none focus:ring focus:ring-blue-200 focus:border-blue-300 text-white">
+                    <input id="diametroTuberia" name="diametroTuberia" placeholder="Diámetro de Tubería en mm" required class="w-full px-3 py-2 placeholder-white placeholder-opacity-70 bg-blue-600 bg-opacity-50 border border-blue-300 rounded-md focus:outline-none focus:ring focus:ring-blue-200 focus:border-blue-300 text-white">
+                    <input id="breakerPolosAmps" name="breakerPolosAmps" placeholder="Breaker Polos / Amps" required class="w-full px-3 py-2 placeholder-white placeholder-opacity-70 bg-blue-600 bg-opacity-50 border border-blue-300 rounded-md focus:outline-none focus:ring focus:ring-blue-200 focus:border-blue-300 text-white">
+                    <input id="tipoBreaker" name="tipoBreaker" placeholder="Tipo Breaker" required class="w-full px-3 py-2 placeholder-white placeholder-opacity-70 bg-blue-600 bg-opacity-50 border border-blue-300 rounded-md focus:outline-none focus:ring focus:ring-blue-200 focus:border-blue-300 text-white">
+                    <input id="distancia" name="distancia" type="number" placeholder="Distancia (m)" required class="w-full px-3 py-2 placeholder-white placeholder-opacity-70 bg-blue-600 bg-opacity-50 border border-blue-300 rounded-md focus:outline-none focus:ring focus:ring-blue-200 focus:border-blue-300 text-white">
+                    <input id="potenciaFaseA" name="potenciaFaseA" type="number" placeholder="Potencia de Fase A" class="w-full px-3 py-2 placeholder-white placeholder-opacity-70 bg-blue-600 bg-opacity-50 border border-blue-300 rounded-md focus:outline-none focus:ring focus:ring-blue-200 focus:border-blue-300 text-white">
+                    <input id="potenciaFaseB" name="potenciaFaseB" type="number" placeholder="Potencia de Fase B" class="w-full px-3 py-2 placeholder-white placeholder-opacity-70 bg-blue-600 bg-opacity-50 border border-blue-300 rounded-md focus:outline-none focus:ring focus:ring-blue-200 focus:border-blue-300 text-white">
+                </div>
+                <div class="flex justify-between">
+                    <button type="submit" class="px-6 py-2 bg-blue-600 text-white rounded hover:bg-blue-700">Agregar Circuito</button>
+                    <button type="button" id="dimensionarButton" class="px-6 py-2 bg-green-600 text-white rounded hover:bg-green-700">Dimensionar</button>
+                </div>
+            </form>
+            <button id="backToInitialButton" class="mt-4 px-4 py-2 bg-gray-600 text-white rounded hover:bg-gray-700">Regresar</button>
+        </div>
+
+        <!-- Resultados -->
+        <div id="resultWindow" class="card w-full max-w-6xl mx-auto rounded-lg shadow-lg p-6 hidden">
+            <h2 class="text-2xl font-semibold mb-4 text-center">TABLERO "T01" (MONOFASICO)</h2>
+            <p id="tableroDescripcion" class="text-center mb-4"></p>
+            <div class="overflow-x-auto">
+                <table class="min-w-full bg-white text-black">
+                    <thead>
+                        <tr class="bg-gray-200">
+                            <th class="px-4 py-2 text-left">ACCIONES</th>
+                            <th class="px-4 py-2 text-left">CIRCUITOS</th>
+                            <th class="px-4 py-2 text-left">DESCRIPCION DE LOS CIRCUITOS</th>
+                            <th class="px-4 py-2 text-left">FASE A</th>
+                            <th class="px-4 py-2 text-left">FASE B</th>
+                            <th class="px-4 py-2 text-left">NEUTRO</th>
+                            <th class="px-4 py-2 text-left">TIERRA</th>
+                            <th class="px-4 py-2 text-left">TENSION EN VOLTIOS</th>
+                            <th class="px-4 py-2 text-left">TUBERIA Ø</th>
+                            <th class="px-4 py-2 text-left">BREAKER POLOS / AMPS</th>
+                            <th class="px-4 py-2 text-left">TIPO BREAKER</th>
+                            <th class="px-4 py-2 text-left">FASE A</th>
+                            <th class="px-4 py-2 text-left">FASE B</th>
+                            <th class="px-4 py-2 text-left">DISTANCIA (m)</th>
+                            <th class="px-4 py-2 text-left">CAIDA TENSION (V) FASE A</th>
+                            <th class="px-4 py-2 text-left">CAIDA TENSION (V) FASE B</th>
+                            <th class="px-4 py-2 text-left">CAIDA TENSION (%) FASE A</th>
+                            <th class="px-4 py-2 text-left">CAIDA TENSION (%) FASE B</th>
+                        </tr>
+                    </thead>
+                    <tbody id="resultTableBody">
+                        <!-- Los resultados se insertarán aquí dinámicamente -->
+                    </tbody>
+                    <tfoot>
+                        <tr class="bg-gray-200">
+                            <td colspan="11" class="px-4 py-2 text-right font-bold">POTENCIA NETA POR FASE</td>
+                            <td id="potenciaNetaFaseA" class="px-4 py-2"></td>
+                            <td id="potenciaNetaFaseB" class="px-4 py-2"></td>
+                            <td colspan="5"></td>
+                        </tr>
+                    </tfoot>
+                </table>
+            </div>
+            <div class="mt-4 grid grid-cols-1 md:grid-cols-2 gap-4 text-white">
+                <div>
+                    <p><strong>POTENCIA POR FASE (WATTS):</strong> <span id="potenciaPorFase"></span></p>
+                    <p><strong>POTENCIA TOTAL (WATTS):</strong> <span id="potenciaTotal"></span></p>
+                    <p><strong>CORRIENTE NOMINAL FASE A (AMPS):</strong> <span id="corrienteNominalFaseA"></span></p>
+                    <p><strong>CORRIENTE NOMINAL FASE B (AMPS):</strong> <span id="corrienteNominalFaseB"></span></p>
+                    <div class="mt-4 pt-4 border-t border-gray-600">
+                        <h3 class="text-lg font-semibold mb-2">Resultados del Recálculo</h3>
+                        <p><strong>POTENCIA DEMANDADA (WATTS):</strong> <span id="potenciaDemandada"></span></p>
+                        <p><strong>CORRIENTE DEMANDADA FASE A (AMPS):</strong> <span id="corrienteDemandadaFaseA"></span></p>
+                        <p><strong>CORRIENTE DEMANDADA FASE B (AMPS):</strong> <span id="corrienteDemandadaFaseB"></span></p>
+                    </div>
+                </div>
+                <div class="border-t border-gray-600 mt-4 pt-4">
+                    <h3 class="text-lg font-semibold mb-2">Recálculo de Resultados</h3>
+                    <form id="factoresForm" class="space-y-2">
+                        <div class="grid grid-cols-2 gap-4">
+                            <div>
+                                <label for="factorPotencia" class="block text-sm  font-medium">FACTOR DE  POTENCIA:</label>
+                                <input type="number"   id="factorPotencia" name="factorPotencia" min="0" max="1" step="0.01" 
+                                    value="0.98" required
+                                    class="w-full px-3 py-2 bg-blue-600 bg-opacity-50 border border-blue-300 rounded-md focus:outline-none focus:ring focus:ring-blue-200 focus:border-blue-300 text-white">
+                            </div>
+                            <div>
+                                <label for="factorDemanda" class="block text-sm font-medium">FACTOR DE DEMANDA:</label>
+                                <input type="number" id="factorDemanda" name="factorDemanda" min="0" max="1" step="0.01"
+                                    value="0.6" required
+                                    class="w-full px-3 py-2 bg-blue-600 bg-opacity-50 border border-blue-300 rounded-md focus:outline-none focus:ring focus:ring-blue-200 focus:border-blue-300 text-white">
+                            </div>
+                        </div>
+                        <button type="submit"
+                            class="w-full px-4 py-2 bg-blue-600 text-white rounded hover:bg-blue-700">Actualizar
+                            Cálculos</button>
+                    </form>
+                    <div class="border-t border-gray-600 mt-4 pt-4">
+                        <h3 class="text-lg font-semibold mb-2">Alimentadores</h3>
+                        <p>2 Conductores Fases #<span id="calibreConductorFase"></span> THHN Cobre</p>
+                        <p>1 Conductor Neutro #<span id="calibreConductorNeutro"></span> THHN Cobre</p>
+                        <p>1 Conductor Tierra #<span id="calibreConductorTierra"></span> THHN Cobre</p>
+                        <p id="canalizacionConduit"></p>
+                    </div>
+                </div>
+                <p><strong>INTERRUPTOR PRINCIPAL (AMPS):</strong> <span id="interruptorPrincipal"></span></p>
+                <p><small>Cálculo base: <span id="interruptorPrincipalBase"></span> A, Ajustado con factor de seguridad:
+                        <span id="interruptorPrincipalAjustado"></span> A</small></p>
+                <p><strong>CAIDA DE VOLTAJE ESTIMADA ALIMENTADORES:</strong> 1.50%</p>
+                <div>
+                    <label for="longitudMaxima" class="block text-sm font-medium">LONGITUD MAXIMA ALIMENTADOR
+                        (METROS):</label>
+                    <input type="number" id="longitudMaxima" name="longitudMaxima" min="0" step="0.1" value="20" required
+                        class="w-full px-3 py-2 bg-blue-600 bg-opacity-50 border border-blue-300 rounded-md focus:outline-none focus:ring focus:ring-blue-200 focus:border-blue-300 text-white">
+                </div>
+            </div>
+            <div class="mt-4 flex justify-center space-x-4">
+                <button id="verProyectoSinTransformador" class="px-6 py-3 bg-purple-600 text-white rounded-lg hover:bg-purple-700 focus:outline-none focus:ring-2 focus:ring-purple-400 focus:ring-opacity-50 text-lg font-semibold">
+                    Visualizar proyecto sin transformador
+                </button>
+            </div>
+            <button id="backToInputButton" class="mt-4 px-4 py-2 bg-gray-600 text-white rounded hover:bg-gray-700">Regresar</button>
+        </div>
+
+        <!-- Nueva página para proyecto sin transformador -->
+        <div id="proyectoSinTransformadorWindow" class="card w-full max-w-4xl mx-auto rounded-lg shadow-lg p-6 hidden">
+            <h2 class="text-2xl font-semibold mb-4 text-center">PROYECTO SIN TRANSFORMADOR</h2>
+            <div class="bg-white text-black rounded-lg p-6">
+                <h3 class="text-xl font-bold mb-4">TABLA RESUMEN DEL PROYECTO</h3>
+                <table class="w-full border-collapse">
+                    <tbody class="text-sm">
+                        <tr class="border-b">
+                            <td class="py-2">KVA TOTALES</td>
+                            <td class="py-2 text-right" id="kvaTotales"></td>
+                        </tr>
+                        <tr class="border-b">
+                            <td class="py-2">KVA DEMANDADOS</td>
+                            <td class="py-2 text-right" id="kvaDemandados"></td>
+                        </tr>
+                        <tr class="border-b">
+                            <td class="py-2">FACTOR DE DEMANDA</td>
+                            <td class="py-2 text-right" id="factorDemandaResumen"></td>
+                        </tr>
+                        <tr class="border-b">
+                            <td class="py-2">FACTOR DE POTENCIA</td>
+                            <td class="py-2 text-right" id="factorPotenciaResumen"></td>
+                        </tr>
+                        <tr class="border-b">
+                            <td class="py-2">ALIMENTADORES</td>
+                            <td class="py-2 text-right"></td>
+                        </tr>
+                        <tr class="border-b">
+                            <td class="py-2">CALIBRE CONDUCTOR DE FASES (AWG/THHN)</td>
+                            <td class="py-2 text-right" id="calibreFasesResumen"></td>
+                        </tr>
+                        <tr class="border-b">
+                            <td class="py-2">CALIBRE CONDUCTOR NEUTRO (AWG/THHN)</td>
+                            <td class="py-2 text-right" id="calibreNeutroResumen"></td>
+                        </tr>
+                        <tr class="border-b">
+                            <td class="py-2">CALIBRE CONDUCTOR TIERRA (AWG/THHN)</td>
+                            <td class="py-2 text-right" id="calibreTierraResumen"></td>
+                        </tr>
+                        <tr class="border-b">
+                            <td class="py-2">LONGITUD (m)</td>
+                            <td class="py-2 text-right" id="longitudResumen"></td>
+                        </tr>
+                        <tr class="border-b">
+                            <td class="py-2">VOLTAJE NOMINAL</td>
+                            <td class="py-2 text-right">120 / 240 VOLTIOS</td>
+                        </tr>
+                        <tr class="border-b">
+                            <td class="py-2">VOLTAJE CALCULADO</td>
+                            <td class="py-2 text-right">118.2 / 236.4 VOLTIOS</td>
+                        </tr>
+                        <tr class="border-b">
+                            <td class="py-2">CAIDA DE VOLTAJE (VOLTIOS)</td>
+                            <td class="py-2 text-right">1.8 / 3.6 VOLTIOS</td>
+                        </tr>
+                        <tr class="border-b">
+                            <td class="py-2">CAIDA DE VOLTAJE ESTIMADA (%)</td>
+                            <td class="py-2 text-right">1.50</td>
+                        </tr>
+                    </tbody>
+                </table>
+            </div>
+            <div class="mt-4 flex justify-center space-x-4">
+                <button id="backToMainButton" class="px-4 py-2 bg-gray-600 text-white rounded hover:bg-gray-700">Regresar</button>
+                <button id="iniciarNuevoProyecto" class="px-6 py-3 bg-green-600 text-white rounded-lg hover:bg-green-700 focus:outline-none focus:ring-2 focus:ring-green-400 focus:ring-opacity-50 text-lg font-semibold">
+                    INICIAR NUEVO PROYECTO
+                </button>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        let circuits = [];
+
+        const resistanceTable = {
+            '14': 2.525,
+            '12': 2.0,
+            '10': 1.588,
+            '8': 0.9989,
+            '6': 0.3951,
+            '4': 0.2485,
+            '3': 0.1563,
+            '2': 0.1563,
+            '1': 0.1239,
+            '1/0': 0.0972,
+            '2/0': 0.0779,
+            '3/0': 0.0619,
+            '4/0': 0.0492
+        };
+
+        function showWindow(windowId) {
+            document.querySelectorAll('div[id$="Window"], div[id="inputForm"]').forEach(el => el.classList.add('hidden'));
+            document.getElementById(windowId).classList.remove('hidden');
+        }
+
+        function addCircuit(e) {
+            e.preventDefault();
+            const formData = new FormData(e.target);
+            const circuit = Object.fromEntries(formData.entries());
+            circuits.push(circuit);
+            e.target.reset();
+            alert('Circuito agregado con éxito.');
+        }
+
+        function calculateVoltageDrop(distance, current, resistance) {
+            return (2 * distance * current * resistance) / 1000;
+        }
+
+        function calculateResults() {
+            if (circuits.length > 0) {
+                const tableBody = document.getElementById('resultTableBody');
+                tableBody.innerHTML = '';
+                let potenciaFaseA = 0;
+                let potenciaFaseB = 0;
+                
+                circuits.forEach((circuit, index) => {
+                    const voltageA = parseFloat(circuit.tension);
+                    const voltageB = parseFloat(circuit.tension);
+                    const currentA = parseFloat(circuit.potenciaFaseA) / voltageA || 0;
+                    const currentB = parseFloat(circuit.potenciaFaseB) / voltageB || 0;
+                    const distance = parseFloat(circuit.distancia);
+                    const resistanceA = resistanceTable[circuit.dimensionadoConductorFaseA] || 0;
+                    const resistanceB = resistanceTable[circuit.dimensionadoConductorFaseB] || 0;
+
+                    const voltageDropA = calculateVoltageDrop(distance, currentA, resistanceA);
+                    const voltageDropB = calculateVoltageDrop(distance, currentB, resistanceB);
+                    const voltageDropPercentA = (voltageDropA / voltageA) * 100;
+                    const voltageDropPercentB = (voltageDropB / voltageB) * 100;
+                    
+                    const row = document.createElement('tr');
+                    row.innerHTML = `
+                        <td class="px-4 py-2 whitespace-no-wrap border-b border-gray-200">
+                            <button onclick="editCircuit(${index})" class="text-blue-600 hover:text-blue-800 mr-2">✎</button>
+                            <button onclick="deleteCircuit(${index})" class="text-red-600 hover:text-red-800">✖</button>
+                        </td>
+                        <td class="px-4 py-2 whitespace-no-wrap border-b border-gray-200">${circuit.circuito}</td>
+                        <td class="px-4 py-2 whitespace-no-wrap border-b border-gray-200">${circuit.descripcionCircuito}</td>
+                        <td class="px-4 py-2 whitespace-no-wrap border-b border-gray-200">${circuit.dimensionadoConductorFaseA || 'N/A'}</td>
+                        <td class="px-4 py-2 whitespace-no-wrap border-b border-gray-200">${circuit.dimensionadoConductorFaseB || 'N/A'}</td>
+                        <td class="px-4 py-2 whitespace-no-wrap border-b border-gray-200">${circuit.dimensionadoConductorNeutro || 'N/A'}</td>
+                        <td class="px-4 py-2 whitespace-no-wrap border-b border-gray-200">${circuit.dimensionadoConductorTierra || 'N/A'}</td>
+                        <td class="px-4 py-2 whitespace-no-wrap border-b border-gray-200">${circuit.tension}</td>
+                        <td class="px-4 py-2 whitespace-no-wrap border-b border-gray-200">${circuit.diametroTuberia}</td>
+                        <td class="px-4 py-2 whitespace-no-wrap border-b border-gray-200">${circuit.breakerPolosAmps}</td>
+                        <td class="px-4 py-2 whitespace-no-wrap border-b border-gray-200">${circuit.tipoBreaker}</td>
+                        <td class="px-4 py-2 whitespace-no-wrap border-b border-gray-200">${circuit.potenciaFaseA || '0'}</td>
+                        <td class="px-4 py-2 whitespace-no-wrap border-b border-gray-200">${circuit.potenciaFaseB || '0'}</td>
+                        <td class="px-4 py-2 whitespace-no-wrap border-b border-gray-200">${circuit.distancia}</td>
+                        <td class="px-4 py-2 whitespace-no-wrap border-b border-gray-200">${voltageDropA.toFixed(2)}</td>
+                        <td class="px-4 py-2 whitespace-no-wrap border-b border-gray-200">${voltageDropB.toFixed(2)}</td>
+                        <td class="px-4 py-2 whitespace-no-wrap border-b border-gray-200">${voltageDropPercentA.toFixed(2)}</td>
+                        <td class="px-4 py-2 whitespace-no-wrap border-b border-gray-200">${voltageDropPercentB.toFixed(2)}</td>
+                    `;
+                    tableBody.appendChild(row);
+                    
+                    potenciaFaseA += parseFloat(circuit.potenciaFaseA || 0);
+                    potenciaFaseB += parseFloat(circuit.potenciaFaseB || 0);
+                });
+                
+                updateResults(potenciaFaseA, potenciaFaseB);
+                
+                showWindow('resultWindow');
+            } else {
+                alert('Por favor, agregue al menos un circuito antes de dimensionar.');
+            }
+        }
+
+        function calcularCalibreConductor(potenciaTotal) {
+            const amperajeBase = (potenciaTotal / 240) / 2;
+            const amperajeAjustado = amperajeBase * 1.25;
+            
+            const tablaCalibreAmperaje = [
+                { calibre: '14', amperaje: 15 },
+                { calibre: '12', amperaje: 20 },
+                { calibre: '10', amperaje: 30 },
+                { calibre: '8', amperaje: 40 },
+                { calibre: '6', amperaje: 55 },
+                { calibre: '4', amperaje: 70 },
+                { calibre: '3', amperaje: 85 },
+                { calibre: '2', amperaje: 95 },
+                { calibre: '1', amperaje: 110 },
+                { calibre: '1/0', amperaje: 125 },
+                { calibre: '2/0', amperaje: 145 },
+                { calibre: '3/0', amperaje: 165 },
+                { calibre: '4/0', amperaje: 195 }
+            ];
+            
+            for (let i = 0; i < tablaCalibreAmperaje.length; i++) {
+                if (amperajeAjustado <= tablaCalibreAmperaje[i].amperaje) {
+                    return tablaCalibreAmperaje[i].calibre;
+                }
+            }
+            
+            return '4/0'; // Si excede todos los valores, retorna el calibre más grande
+        }
+
+        function calcularCalibreTierra(calibreFase) {
+            const tablaCalibre = {
+                '14': '16',
+                '12': '14',
+                '10': '12',
+                '8': '10',
+                '6': '8',
+                '4': '6',
+                '2': '4',
+                '1/0': '2',
+                '2/0': '1/0',
+                '3/0': '2/0',
+                '4/0': '3/0'
+            };
+            return tablaCalibre[calibreFase] || calibreFase;
+        }
+
+        function updateResults(potenciaFaseA, potenciaFaseB) {
+            const factorPotencia = parseFloat(document.getElementById('factorPotencia').value);
+            const factorDemanda = parseFloat(document.getElementById('factorDemanda').value);
+
+            document.getElementById('potenciaNetaFaseA').textContent = potenciaFaseA.toFixed(2);
+            document.getElementById('potenciaNetaFaseB').textContent = potenciaFaseB.toFixed(2);
+       
+            document.getElementById('potenciaPorFase').textContent = `${potenciaFaseA.toFixed(2)} / ${potenciaFaseB.toFixed(2)}`;
+            const potenciaTotal = potenciaFaseA + potenciaFaseB;
+            document.getElementById('potenciaTotal').textContent = potenciaTotal.toFixed(2);
+       
+            const corrienteNominalFaseA = (potenciaFaseA / (240 * factorPotencia)).toFixed(2);
+            const corrienteNominalFaseB = (potenciaFaseB / (240 * factorPotencia)).toFixed(2);
+       
+            document.getElementById('corrienteNominalFaseA').textContent = corrienteNominalFaseA;
+            document.getElementById('corrienteNominalFaseB').textContent = corrienteNominalFaseB;
+
+            const potenciaDemandada = potenciaTotal * factorDemanda;
+            document.getElementById('potenciaDemandada').textContent = potenciaDemandada.toFixed(2);
+
+            const corrienteDemandadaFaseA = parseFloat(corrienteNominalFaseA) * factorDemanda;
+            document.getElementById('corrienteDemandadaFaseA').textContent = corrienteDemandadaFaseA.toFixed(2);
+
+            const corrienteDemandadaFaseB = parseFloat(corrienteNominalFaseB) * factorDemanda;
+            document.getElementById('corrienteDemandadaFaseB').textContent = corrienteDemandadaFaseB.toFixed(2);
+
+            const interruptorPrincipalBase = (potenciaTotal / 240);
+            const interruptorPrincipalAjustado = interruptorPrincipalBase * 1.25;
+            const calibreConductorFase = calcularCalibreConductor(potenciaTotal);
+            const calibreConductorNeutro = calibreConductorFase;
+            const calibreConductorTierra = calcularCalibreTierra(calibreConductorFase);
+            const valoresInterruptor = [15, 20, 25, 30, 40, 50, 60, 70, 80, 90, 100, 110, 125];
+            const interruptorPrincipal = valoresInterruptor.find(valor => valor >= interruptorPrincipalAjustado) || 125;
+            document.getElementById('interruptorPrincipal').textContent = interruptorPrincipal;
+
+            document.getElementById('interruptorPrincipalBase').textContent = interruptorPrincipalBase.toFixed(2);
+            document.getElementById('interruptorPrincipalAjustado').textContent = interruptorPrincipalAjustado.toFixed(2);
+
+            let espacios, circuitos, barrasPrincipales;
+            if (interruptorPrincipal <= 100) {
+                espacios = 10;
+                circuitos = 20;
+                barrasPrincipales = 100;
+            } else if (interruptorPrincipal <= 150) {
+                espacios = 32;
+                circuitos = 64;
+                barrasPrincipales = 200;
+            } else {
+                espacios = 42;
+                circuitos = 84;
+                barrasPrincipales = 200;
+            }
+
+            const descripcionTablero = `DESCRIPCIÓN DEL TABLERO: ${espacios} ESPACIOS / ${circuitos} CIRCUITOS, VOLTAJE 120/240 V, BARRAS PRINCIPALES ${barrasPrincipales} AMPS, FASES 2, TIERRA Y NEUTROS INDEPENDIENTES`;
+            document.getElementById('tableroDescripcion').textContent = descripcionTablero;
+            document.getElementById('calibreConductorFase').textContent = calibreConductorFase;
+            document.getElementById('calibreConductorNeutro').textContent = calibreConductorNeutro;
+            document.getElementById('calibreConductorTierra').textContent = calibreConductorTierra;
+
+            // Cálculo de la canalización Conduit EMT
+            let canalizacionConduit = "";
+            const calibresFases = ['14', '12', '10', '8', '6', '4', '2', '1', '1/0', '2/0', '3/0', '4/0'];
+            const indexCalibreFase = calibresFases.indexOf(calibreConductorFase);
+
+            if (indexCalibreFase >= 0 && indexCalibreFase <= 3) {
+                canalizacionConduit = 'Canalización Conduit EMT 1¼" (32 mm)';
+            } else if (indexCalibreFase >= 4 && indexCalibreFase <= 5) {
+                canalizacionConduit = 'Canalización Conduit EMT 1½" (38 mm)';
+            } else if (indexCalibreFase >= 6 && indexCalibreFase <= 8) {
+                canalizacionConduit = 'Canalización Conduit EMT 2" (51 mm)';
+            } else if (indexCalibreFase === 9) {
+                canalizacionConduit = 'Canalización Conduit EMT 2½" (64 mm)';
+            } else if (indexCalibreFase >= 10) {
+                canalizacionConduit = 'Canalización Conduit EMT 3" (76 mm)';
+            }
+
+            document.getElementById('canalizacionConduit').textContent = canalizacionConduit;
+
+            // Actualizar la tabla resumen del proyecto
+            document.getElementById('kvaTotales').textContent = (potenciaTotal / 1000).toFixed(2);
+            document.getElementById('kvaDemandados').textContent = (potenciaDemandada / 1000).toFixed(2);
+            document.getElementById('factorDemandaResumen').textContent = factorDemanda.toFixed(2);
+            document.getElementById('factorPotenciaResumen').textContent = factorPotencia.toFixed(2);
+            document.getElementById('calibreFasesResumen').textContent = calibreConductorFase;
+            document.getElementById('calibreNeutroResumen').textContent = calibreConductorNeutro;
+            document.getElementById('calibreTierraResumen').textContent = calibreConductorTierra;
+            document.getElementById('longitudResumen').textContent = document.getElementById('longitudMaxima').value;
+        }
+
+        function editCircuit(index) {
+            const circuit = circuits[index];
+            // Aquí puedes implementar la lógica para editar el circuito
+            // Por ejemplo, puedes llenar el formulario con los datos del circuito y permitir al usuario editarlos
+            alert(`Editar circuito ${index + 1}`);
+        }
+
+        function deleteCircuit(index) {
+            if (confirm(`¿Está seguro de que desea eliminar el circuito ${index + 1}?`)) {
+                circuits.splice(index, 1);
+                calculateResults();
+            }
+        }
+
+        document.addEventListener('DOMContentLoaded', function() {
+            document.getElementById('startButton').addEventListener('click', function() {
+                showWindow('inputForm');
+            });
+
+            document.getElementById('circuitForm').addEventListener('submit', addCircuit);
+
+            document.getElementById('dimensionarButton').addEventListener('click', calculateResults);
+
+            document.getElementById('backToInitialButton').addEventListener('click', function() {
+                showWindow('initialWindow');
+            });
+
+            document.getElementById('backToInputButton').addEventListener('click', function() {
+                showWindow('inputForm');
+            });
+
+            document.getElementById('factoresForm').addEventListener('submit', function(e) {
+                e.preventDefault();
+                const potenciaFaseA = parseFloat(document.getElementById('potenciaNetaFaseA').textContent);
+                const potenciaFaseB = parseFloat(document.getElementById('potenciaNetaFaseB').textContent);
+                updateResults(potenciaFaseA, potenciaFaseB);
+            });
+
+            document.getElementById('verProyectoSinTransformador').addEventListener('click', function() {
+                showWindow('proyectoSinTransformadorWindow');
+            });
+
+            document.getElementById('backToMainButton').addEventListener('click', function() {
+                showWindow('resultWindow');
+            });
+
+            document.getElementById('iniciarNuevoProyecto').addEventListener('click', function() {
+                if (confirm('¿Está seguro de que desea iniciar un nuevo proyecto? Todos los datos ingresados se perderán.')) {
+                    circuits = [];
+                    document.getElementById('circuitForm').reset();
+                    showWindow('initialWindow');
+                }
+            });
+        });
+    </script>
+</body>
+</html>
